@@ -39,7 +39,7 @@ export class EskizMiddleware implements NestMiddleware {
     if (!number) {
       return res.status(400).json({ message: 'Phone number is required' });
     }
-    const otp = Math.floor(1000 + Math.random() * 9000);
+    const otp = Math.floor(10000 + Math.random() * 10000);
 
     try {
       const token = await this.authenticate();

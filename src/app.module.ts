@@ -16,7 +16,9 @@ export class AppModule {
   configure(consumer:MiddlewareConsumer){
     consumer
       .apply(EskizMiddleware)
-      .forRoutes({ path: 'users/phone-number', method: RequestMethod.POST })
+      .forRoutes({ path: 'users/phone-number', method: RequestMethod.POST },
+        {path:'users/login', method: RequestMethod.GET}
+      )
   }
 }
 

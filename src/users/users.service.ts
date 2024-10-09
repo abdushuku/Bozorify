@@ -22,6 +22,16 @@ export class UsersService {
     }
   }
 
+  async login(req:Request, res:Response){
+    const { phone_number } = req.body;
+    const otp = req['otp']
+    console.log(otp);
+    
+    res.cookie('otp', otp)
+    res.cookie('phone_number', phone_number)
+    return {'message': 'OTP sent successfully'}
+  }
+
   async password(req:Request, res: Response) {
     const { password, password1 } = req.body;
     try {
@@ -52,5 +62,26 @@ export class UsersService {
       this.logger.error('Error during OTP verification', error.stack); // Log error
       throw error;
     }
+  }
+
+  async loginVerification(req:Request, res:Response){
+    const { otp } = req.body;
+    const { otp: storedOtp, number } = req.cookies;
+
+    if(otp === storedOtp){
+      const user = this.userRepository.findOneBy({phone_number: number})
+      return user
+    }else{
+      return {message: 'Invalid OTP'}
+    }
+  }
+
+  async updateUserGender(req:Request, res:Response){
+    const { gender } = req.body;
+    const { number} = req.cookies
+    const updateUser = await this.userRepository.findOne({where: {phone_number: number}})
+    updateUser.gender = gender
+    await this.userRepository.save(updateUser)
+    return updateUser
   }
 }
